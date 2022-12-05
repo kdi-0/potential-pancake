@@ -27,6 +27,8 @@
         if (p === 0) return k;
         return gcd(p, k % p);
     }
+
+    // lcm(a,b) * gcd(a,b)  = a*b
     function lcm(k: number, p: number):number {
         return Math.floor((k*p)/gcd(k,p));
     }

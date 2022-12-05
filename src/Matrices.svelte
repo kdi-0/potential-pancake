@@ -141,59 +141,26 @@
             result.data[0][1] = -m.data[0][1]/determinant;
             result.data[1][0] = -m.data[1][0]/determinant;
             result.data[1][1] = m.data[0][0]/determinant;
+            return result;
         }
 
         // 3x3 and 4x4
 
         if (result.cols >= 3) {
-            let copy: Matrix = {...m} as Matrix;
-            let N:number = result.cols;
-            for (let i = 0; i < N; i++) {
-                // Find the pivot element
-                let pivot = i;
-                for (let j = i + 1; j < N; j++) {
-                    if (Math.abs(copy.data[j][i]) > Math.abs(copy.data[pivot][i])) {
-                        pivot = j;
-                    }
-                }
-
-                // Swap rows if necessary
-                if (pivot !== i) {
-                    const temp = copy.data[i];
-                    copy.data[i] = copy.data[pivot];
-                    copy.data[pivot] = temp;
-
-                    // Update the inverse matrix
-                    const temp2 = result.data[i];
-                    result.data[i] = result.data[pivot];
-                    result.data[pivot] = temp2;
-                }
-
-                // Singularity check
-                if (copy.data[i][i] === 0) {
-                    return undefined;
-                }
-
-                // Normalize pivot row
-                const pivotValue = copy.data[i][i];
-                for (let j = 0; j < N; j++) {
-                    copy.data[i][j] /= pivotValue;
-                    result.data[i][j] /= pivotValue;
-                }
-
-                // Eliminate non-zero entries
-                for (let j = 0; j < N; j++) {
-                    if (j !== i && copy.data[j][i] !== 0) {
-                        const factor = copy.data[j][i];
-                        for (let k = 0; k < N; k++) {
-                            copy.data[j][k] -= copy.data[i][k] * factor;
-                            result.data[j][k] -= result.data[i][k] * factor;
-                        }
-                    }
+            for (let i = 0; i < result.rows ; i++){
+                for(let j = 0; j < result.cols; j++){
+                    result.data[i][j] = Math.pow(-1, i) * det(getSubMatrix(m, i, j));
                 }
             }
-        }
-
+            result = transpose(result);
+            for (let i = 0; i < result.rows ; i++){
+                for(let j = 0; j < result.cols; j++){
+                    let num = result.data[i][j];
+                    result.data[i][j] = parseFloat((num/determinant).toFixed(3));
+                }
+            }
+            return result;
+        }        
         return result;
     }
 
